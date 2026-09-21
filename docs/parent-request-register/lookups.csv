@@ -1,0 +1,68 @@
+list,value,notes
+Status,10 Submitted,acknowledged same day by script
+Status,20 Needs Info,parent has 10 working days
+Status,30 In Review,finance officer; 5 working days
+Status,40 Ready for Board,
+Status,50 On Agenda,cut-off 7 days before the meeting
+Status,60 Decided,3 working days to notify the parent
+Status,70 Parent Notified,3 working days to apply in finance
+Status,80 Applied in Finance,
+Status,90 Closed,
+Status,95 Withdrawn,
+Decision,Approved,
+Decision,Approved with conditions,requires Conditions and Condition Met
+Decision,Declined,
+Decision,Deferred,returns to 40 for the next meeting
+Decision Authority,Board,
+Decision Authority,Head of School,
+Decision Authority,CFO,
+Decision Authority,Finance Manager,
+Request Type,Fee discount - hardship,
+Request Type,Fee discount - other exception,
+Request Type,Scholarship - academic merit,
+Request Type,Scholarship - sport or arts,
+Request Type,Payment plan,
+Request Type,Payment extension,
+Request Type,Late fee waiver,
+Request Type,Refund,
+Request Type,Fee freeze,
+Request Type,Other,
+Fee Type,Tuition,
+Fee Type,Enrolment,
+Fee Type,Admission,
+Fee Type,Capital,
+Fee Type,Application exam,
+Fee Type,Cambridge exam,
+Fee Type,Bus,
+Fee Type,Late fee,
+Fee Type,Other,
+Basis,Percentage,Value is 0-100
+Basis,Fixed amount,Value is USD
+Basis,Payment plan,Value is the number of instalments
+Basis,Deferral,Value is the number of days
+Basis,Full waiver,Value is 100
+Reason Category,Loss of income,
+Reason Category,Business downturn,
+Reason Category,Medical or health,
+Reason Category,Bereavement,
+Reason Category,Multiple children,
+Reason Category,Currency or transfer difficulty,
+Reason Category,Merit,
+Reason Category,Staff or partner entitlement,
+Reason Category,Other,
+Payment History,On time,
+Payment History,Occasional late,
+Payment History,In arrears,
+Recommendation,Approve as requested,
+Recommendation,Approve in part,
+Recommendation,Decline,
+Recommendation,Defer,
+Relationship,Mother,
+Relationship,Father,
+Relationship,Legal guardian,
+Relationship,Other,
+Language,Khmer,
+Language,English,
+Yes No NA,Yes,
+Yes No NA,No,
+Yes No NA,N/A,

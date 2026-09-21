@@ -1,0 +1,65 @@
+tab,band,order,field,type,source,required,validation,notes
+02_REQUESTS,A,1,Request ID,text,script,yes,unique; matches PR-\d{4}-\d{4},assigned on form submit; never reused
+02_REQUESTS,A,2,Submitted At,datetime,form,yes,,form timestamp
+02_REQUESTS,A,3,Academic Year,text,script,yes,list: Academic Year,derived from Submitted At
+02_REQUESTS,A,4,Status,text,staff,yes,list: Status,numeric prefix so it sorts
+02_REQUESTS,A,5,Decision,text,staff,no,list: Decision,blank until Status >= 60
+02_REQUESTS,A,6,Days in Stage,number,formula,no,,TODAY() minus last status change
+02_REQUESTS,A,7,Supersedes,text,staff,no,existing Request ID,prior-year request this replaces
+02_REQUESTS,A,8,Appeal Of,text,staff,no,existing Request ID,original request being appealed
+02_REQUESTS,B,9,Student ID,text,form,yes,exists in SIS,ONLY join key to finance; never match on name
+02_REQUESTS,B,10,Student Name,text,form,yes,,display only
+02_REQUESTS,B,11,Grade,text,form,yes,list: Grade,
+02_REQUESTS,B,12,Guardian Name,text,form,yes,,
+02_REQUESTS,B,13,Relationship,text,form,yes,list: Relationship,
+02_REQUESTS,B,14,Phone,text,form,yes,,
+02_REQUESTS,B,15,Email,text,form,no,,
+02_REQUESTS,B,16,Language,text,form,yes,list: Language,drives which letter template is used
+02_REQUESTS,B,17,Siblings at School,number,form,no,>= 0,
+02_REQUESTS,C,18,Request Type,text,form,yes,list: Request Type,
+02_REQUESTS,C,19,Fees Affected,text,form,yes,multi from list: Fee Type,one decision line per fee
+02_REQUESTS,C,20,Basis,text,form,yes,list: Basis,
+02_REQUESTS,C,21,Value Requested,number,form,yes,> 0,percent or USD per Basis
+02_REQUESTS,C,22,Period From,date,form,yes,,
+02_REQUESTS,C,23,Period To,date,form,yes,>= Period From,
+02_REQUESTS,C,24,Reason Category,text,form,yes,list: Reason Category,drives the precedent pivot
+02_REQUESTS,C,25,Parent Statement,text,form,yes,,free text; the parent's own words
+02_REQUESTS,C,26,Documents,url,script,no,,Drive folder created on submit
+02_REQUESTS,D,27,Reviewed By,text,finance,yes,list: Staff,
+02_REQUESTS,D,28,Review Date,date,finance,yes,,
+02_REQUESTS,D,29,Outstanding Balance,currency,finance,yes,,from the finance app at review date
+02_REQUESTS,D,30,Payment History,text,finance,yes,list: Payment History,
+02_REQUESTS,D,31,Years at School,number,finance,no,>= 0,
+02_REQUESTS,D,32,Existing Discount Pct,number,finance,no,0-100,discounts already in force
+02_REQUESTS,D,33,Full Fee USD,currency,finance,yes,> 0,before any discount
+02_REQUESTS,D,34,Policy Reference,text,finance,no,,fee policy section
+02_REQUESTS,D,35,Prior Requests,number,formula,no,,COUNTIFS on Student ID
+02_REQUESTS,D,36,Precedent IDs,text,finance,no,existing Request IDs,comparable past cases
+02_REQUESTS,D,37,School Recommendation,text,finance,yes,list: Recommendation,
+02_REQUESTS,D,38,Recommended Value,number,finance,no,,
+02_REQUESTS,D,39,Cost to School USD,currency,formula,no,,the number the board needs
+02_REQUESTS,D,40,Review Notes,text,finance,no,,
+02_REQUESTS,E,41,Decided By,text,secretary,yes,list: Decision Authority,Board / Head of School / CFO / Finance Manager
+02_REQUESTS,E,42,Board Meeting Ref,text,secretary,no,matches BM-\d{4}-\d{2}-\d{2},blank for delegated decisions
+02_REQUESTS,E,43,Decision Date,date,secretary,yes,,
+02_REQUESTS,E,44,Decision,text,secretary,yes,list: Decision,mirrors column 5
+02_REQUESTS,E,45,Conditions,text,secretary,no,,plain text; the condition itself
+02_REQUESTS,E,46,Condition Met,text,secretary,no,list: Yes No NA,must be Yes before Status 80
+02_REQUESTS,E,47,Minute Link,url,secretary,no,,link to the board minutes
+02_REQUESTS,F,48,Parent Notified Date,date,finance,no,,
+02_REQUESTS,F,49,Letter Link,url,script,no,,generated from the row
+02_REQUESTS,F,50,Finance Applied Date,date,finance,no,,
+02_REQUESTS,F,51,Finance Applied By,text,finance,no,list: Staff,
+02_REQUESTS,F,52,Reconciled,text,formula,no,,Yes when every decision line has variance 0
+02_REQUESTS,G,53,Legacy Notes,text,migration,no,,anything from the old sheet that maps nowhere
+03_DECISION_LINES,,1,Line ID,text,script,yes,unique; Request ID + /L + n,
+03_DECISION_LINES,,2,Request ID,text,script,yes,exists in 02_REQUESTS,
+03_DECISION_LINES,,3,Student ID,text,script,yes,exists in SIS,copied from the request
+03_DECISION_LINES,,4,Fee Type,text,secretary,yes,list: Fee Type,one line per fee
+03_DECISION_LINES,,5,Basis,text,secretary,yes,list: Basis,
+03_DECISION_LINES,,6,Value,number,secretary,yes,> 0,percent or USD per Basis
+03_DECISION_LINES,,7,Effective From,date,secretary,yes,,
+03_DECISION_LINES,,8,Effective To,date,secretary,yes,>= Effective From,MANDATORY; no open-ended discount
+03_DECISION_LINES,,9,Finance Ref,text,finance,no,,the finance app document number
+03_DECISION_LINES,,10,Applied Value,number,finance,no,,what was actually entered
+03_DECISION_LINES,,11,Variance,number,formula,no,must be 0,Applied Value minus Value
