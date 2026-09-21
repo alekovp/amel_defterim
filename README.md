@@ -6,4 +6,4 @@ Working repository for Paragon International School Cambodia operations design.
 
 | Path | What it is |
 | --- | --- |
-| [`docs/parent-request-register/`](docs/parent-request-register/) | Design for the Parent Request & Board Decision register — intake form, review, board decision, and the link to the finance app. |
+| [`docs/parent-request-register/`](docs/parent-request-register/) | Design for the Parent Request & Board Decision register — data analysis, intake form, review, board decision, and the link to the finance app. |

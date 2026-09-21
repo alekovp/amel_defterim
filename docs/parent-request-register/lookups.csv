@@ -1,37 +1,41 @@
 list,value,notes
 Status,10 Submitted,acknowledged same day by script
+Status,15 Auto-resolved within policy,ask is within entitlement; no human decision
 Status,20 Needs Info,parent has 10 working days
-Status,30 In Review,finance officer; 5 working days
-Status,40 Ready for Board,
-Status,50 On Agenda,cut-off 7 days before the meeting
-Status,60 Decided,3 working days to notify the parent
-Status,70 Parent Notified,3 working days to apply in finance
+Status,30 In Review,3 working days in season; 5 out of season
+Status,40 Ready for Decision,
+Status,50 On Agenda,weekly sitting during the March-May window
+Status,60 Decided,2 working days to inform the parent
+Status,70 Parent Informed,3 working days to apply in finance
 Status,80 Applied in Finance,
 Status,90 Closed,
 Status,95 Withdrawn,
 Decision,Approved,
 Decision,Approved with conditions,requires Conditions and Condition Met
 Decision,Declined,
-Decision,Deferred,returns to 40 for the next meeting
-Decision Authority,Board,
-Decision Authority,Head of School,
-Decision Authority,CFO,
+Decision,Deferred,returns to 40 for the next sitting
+Decision Authority,Automatic - within policy,
 Decision Authority,Finance Manager,
-Request Type,Fee discount - hardship,
-Request Type,Fee discount - other exception,
-Request Type,Scholarship - academic merit,
-Request Type,Scholarship - sport or arts,
-Request Type,Payment plan,
-Request Type,Payment extension,
-Request Type,Late fee waiver,
-Request Type,Refund,
-Request Type,Fee freeze,
-Request Type,Other,
-Fee Type,Tuition,
-Fee Type,Enrolment,
-Fee Type,Admission,
-Fee Type,Capital,
-Fee Type,Application exam,
+Decision Authority,CFO,
+Decision Authority,Head of School,
+Decision Authority,Board,
+Decision Authority,Chairwoman,
+Authority,Policy ladder,entitlement; 76 of 105 legacy capital grants sat here
+Authority,Sibling policy,entitlement; 143 mentions in legacy prose
+Authority,Alumni,entitlement; 12 mentions
+Authority,Referral,entitlement; 6 mentions
+Authority,Early or full payment,entitlement; 16 mentions
+Authority,Group enrolment,entitlement; 4 mentions
+Authority,Staff contract,entitlement; 11 mentions
+Authority,Head of School,DECISION; 5 mentions
+Authority,CFO,DECISION
+Authority,Board,DECISION; 71 mentions
+Authority,Chairwoman,DECISION; 4 mentions
+Fee Type,Capital,280 mentions in legacy prose
+Fee Type,Tuition,208 mentions
+Fee Type,Registration,24 mentions
+Fee Type,Enrolment,6 mentions
+Fee Type,Application,
 Fee Type,Cambridge exam,
 Fee Type,Bus,
 Fee Type,Late fee,
@@ -41,15 +45,41 @@ Basis,Fixed amount,Value is USD
 Basis,Payment plan,Value is the number of instalments
 Basis,Deferral,Value is the number of days
 Basis,Full waiver,Value is 100
+Request Type,Fee discount - within policy,auto-resolved at Status 15
+Request Type,Fee discount - above policy,
+Request Type,Keep previous year rates,common legacy ask
+Request Type,Scholarship,
+Request Type,Payment plan,
+Request Type,Payment extension,
+Request Type,Late fee waiver,
+Request Type,Refund,
+Request Type,Other,
 Reason Category,Loss of income,
 Reason Category,Business downturn,
+Reason Category,Economic conditions or inflation,frequent in legacy statements
 Reason Category,Medical or health,
 Reason Category,Bereavement,
 Reason Category,Multiple children,
-Reason Category,Currency or transfer difficulty,
+Reason Category,Fee increase between years,frequent in legacy statements
 Reason Category,Merit,
 Reason Category,Staff or partner entitlement,
 Reason Category,Other,
+Channel,Form,the target state
+Channel,Email,133 of 136 legacy requests
+Channel,Paper,
+Channel,Telegram,
+Channel,Walk-in,
+Relationship,Mother,
+Relationship,Father,
+Relationship,Legal guardian,
+Relationship,Sibling,
+Relationship,Other,
+Student Relationship,Own child,
+Student Relationship,Nephew,legacy data carries this in free text
+Student Relationship,Niece,legacy data carries this in free text
+Student Relationship,Other dependant,
+Enrolment Status,Existing,
+Enrolment Status,New,
 Payment History,On time,
 Payment History,Occasional late,
 Payment History,In arrears,
@@ -57,10 +87,16 @@ Recommendation,Approve as requested,
 Recommendation,Approve in part,
 Recommendation,Decline,
 Recommendation,Defer,
-Relationship,Mother,
-Relationship,Father,
-Relationship,Legal guardian,
-Relationship,Other,
+Re-registered,Yes - all children,
+Re-registered,Yes - some children,
+Re-registered,No,
+Re-registered,Pending,
+Legacy Source,Register A 2026-2027,136 rows
+Legacy Source,Register B,136 rows
+Legacy Source,Register C,37 rows
+Legacy Source,Register D Secondary,52 rows
+Campus,Primary,
+Campus,Secondary,
 Language,Khmer,
 Language,English,
 Yes No NA,Yes,

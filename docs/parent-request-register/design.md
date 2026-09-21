@@ -1,129 +1,34 @@
 # Parent Request & Board Decision Register — Design
 
 **Owner:** Polat Allekov, Head of IT / Finance, Paragon International School Cambodia
-**Status:** Draft for review — 21 September 2026
-**Replaces:** the current free-form parent-requests spreadsheet
+**Status:** Draft v2 — 21 September 2026, revised against the real data
+**Replaces:** *Parent discount requests - Cross Campus* (`1wNT0YBhf…`)
+**Evidence:** [`analysis.md`](analysis.md) — profile of all 361 request rows
 
 ---
 
-## 0. The problem in one sentence
+## 1. What the data changed
 
-Requests, reviews and decisions are recorded as prose in a grid, so nothing can be
-filtered, summed, matched to a finance entry, or used as precedent for the next
-request — and decisions drift from what is actually applied to a family's account.
+Version 1 of this design assumed a request was one student asking for one discount.
+The file says otherwise, and three findings rewrote the model:
 
-## 1. Evidence
+1. **A request is a family, not a student.** 61% of rows name more than one child —
+   up to seven — and each child gets a different answer inside the same cell.
+2. **Most of the register is not a decision.** At least 51% of requests were
+   answered by applying policy; only 12% contain a grant someone had authority to
+   make. 76 of 105 capital-fee grants sit exactly on the published ladder.
+3. **There is no form.** 133 of 136 requests arrive as email and are hand-typed
+   into the sheet, which is why Student ID — the join key to finance — is present
+   and usable on only 15% of rows.
 
-The parent-requests sheet itself was not readable from `headofit@paragon.com.kh`
-(access pending). The analysis below is taken from the two sheets **downstream of
-the same decisions**, which are readable and exhibit the same failure modes:
-
-- *Pathway Scholarship 2026-27* (`psupervisor@`, id `1lNId3fw…`)
-- *StudentSCL* (`csok@`, id `16yMl0vI…`)
-
-### 1.1 Decisions are prose, not data
-
-Offers are recorded as:
-
-```
-50% (tuition and Cap.)
-25%(50% If they will come both)
-50% (capital / tution / enrollmnt )
-0-10%
-25%-50
-```
-
-None of these can be filtered, summed, or handed to the finance app without a
-human reading and interpreting them. Two readers will interpret `25%-50`
-differently.
-
-### 1.2 Decisions drift from what is applied
-
-| Student | Decision as recorded | What StudentSCL shows applied |
-| --- | --- | --- |
-| Chan Derisa (109285) | 50% tuition **and capital** | tuition 50%, capital **0%**, enrolment **100%** |
-| Tith Sonita (109271) | 50% | tuition 50%, enrolment **100%** |
-| Ear Sovansakhena (109322) | 75% tuition and capital | that, plus enrolment **100%** |
-| Pech Chanmonypich (109298) | 50% capital / tuition, *"Extra Enrolment off"* in the comments column | tuition 50%, capital 50%, enrolment 100% |
-
-Capital fee was decided for Derisa and not applied. Enrolment-fee waivers are
-applied to students whose decision record does not mention them — in one case the
-only trace is a phrase in a free-text comment column.
-
-Either the enrolment waiver is a **standing rule** for scholarship holders — in
-which case it should not be recorded per student as if it were a decision — or it
-is an **undocumented decision**. From the sheets alone you cannot tell which.
-That ambiguity is the core disease, and §4 addresses it directly.
-
-### 1.3 An arithmetic error that nothing catches
-
-*StudentSCL*, Sok Panha Meng (109160), enrolment fee:
-
-| Fee | Discount % | After discount | Discount amount |
-| --- | --- | --- | --- |
-| $1,500.00 | **100%** | **$500.00** | **$1,000.00** |
-
-Three cells that contradict each other. A single variance check would have caught
-it on the day it was typed.
-
-### 1.4 Names are the key, and names do not match
-
-Student `109301` is **Pech Sokleappy** in one sheet and **Chanleaphy Pech** in the
-other. Any process that joins on names will silently mismatch.
-**Student ID must be the only join key.**
-
-### 1.5 Conditions live in prose and are never checked off
-
-*"25% (50% If they will come both)"* — both siblings did enrol and 50% was
-applied, but nowhere is it recorded that anyone verified the condition. Next year
-nobody will know the 50% was conditional at all.
-
-### 1.6 Opinions sit in the same row as the decision
-
-Columns `Mr Udom`, `Mr Hydyr`, `Offer` — two individual recommendations and a
-final number, side by side, with no date and no record of who made the final call.
-
-### 1.7 No dates anywhere
-
-Not submitted, not decided, not applied. So: no ageing, no service standard, no
-way to answer *"when was this agreed?"*, and no way to see a request going stale.
-
-### 1.8 Status is a communications diary
-
-```
-we have informed them n they are appreciate it )
-Seen no reply.
-No answer phone call and telegram.
-They wont use schoolarship
-```
-
-Real and useful information in the wrong column. It cannot be filtered, so it
-cannot drive a worklist.
-
-### 1.9 Multi-year commitments with no expiry
-
-*StudentSCL* carries a **Total Discount for 3 YEARS** column — $223,950 committed
-across the top cohort alone — with no effective-to date on any line. Nothing
-triggers a review, and nothing expires.
-
-### 1.10 Layout that breaks on sort
-
-`PATHWAY` and `GRADE 7` are label rows inside the data. Totals rows sit inside the
-data. A second table is wedged into the right-hand columns starting at row 1. Any
-sort destroys the file.
-
-### 1.11 Discount decisions are scattered across at least four sheets
-
-*Pathway Scholarship 2026-27*, *StudentSCL*, *Siblings 2026/207*,
-*Student Fee Review 2026* and the parent-requests sheet all hold discount-adjacent
-decisions, owned by four different people. No one of them is authoritative.
+Everything below follows from those three.
 
 ---
 
 ## 2. The design in one sentence
 
-**One register. One ID. One row per request. The row moves through stages and is
-never retyped.**
+**Compute what policy already gives. Record only the departures from it. Give every
+departure an ID that reaches the finance app and comes back.**
 
 ---
 
@@ -136,347 +41,318 @@ PR-2627-0042
 └────────── Parent Request
 ```
 
-Rules:
+1. Assigned **automatically on form submit** — never by hand.
+2. Sent to the parent in the acknowledgement immediately, so every later email,
+   call and letter references it.
+3. Never encodes the request type or the decision — both change; the ID cannot.
+4. A resubmission after *Needs Info* keeps the same ID.
+5. Negotiation increments `Revision No` on the **same** ID. It never creates a new
+   row. (Today 32 families occupy 72 rows for exactly this reason.)
+6. A later-year request gets a new ID with `Supersedes` pointing back; an appeal
+   gets a new ID with `Appeal Of`.
+7. Never reused, never renumbered.
 
-1. Assigned **automatically by script** the moment the form is submitted.
-2. Sent to the parent in the acknowledgement email immediately, so every later
-   phone call, letter and email can reference it.
-3. Never encodes the request type or the decision — both can change; the ID cannot.
-4. A re-submission after *Needs Info* **keeps the same ID**.
-5. A request in a later year gets a new ID with `Supersedes` pointing at the old one.
-6. An appeal gets a new ID with `Appeal Of` pointing at the original.
-7. Never reused, never renumbered, even if a request is withdrawn.
-
-Companion references:
-
-| Reference | Format | Example |
+| Companion reference | Format | Example |
 | --- | --- | --- |
-| Board meeting | `BM-YYYY-MM-DD` | `BM-2026-11-05` |
-| Decision line | `PR-2627-0042/L1` | one per fee type |
+| Board meeting | `BM-YYYY-MM-DD` | `BM-2026-04-15` |
+| Decision line | `PR-2627-0042/L3` | one per child × fee |
 | Finance entry | the finance app's own document number | recorded back into the register |
 
 ---
 
-## 4. Rule vs exception — the change that cuts board load
+## 4. Rule or exception — and how the rule gets computed
 
-The single biggest win available. Today everything looks like a decision.
+This is the change that makes everything else affordable.
 
-- A **rule** is in the fee policy. It applies to anyone who meets the criteria.
-  Nobody decides it; finance applies it. *Sibling discount, staff-child discount,
-  early-payment discount* are rules.
-- An **exception** is a departure from the policy for one family. That is what the
-  board exists to decide.
+- A **rule** is in the fee policy: the capital-fee ladder by child order, the
+  sibling discount, alumni, referral, early payment, group enrolment, staff
+  contract. Nobody decides these. A formula issues them.
+- An **exception** is a departure from the rule for one family. That, and only
+  that, is a decision.
 
-Only exceptions enter this register. If a family qualifies for a policy rule, the
-answer is "yes, automatically" and no request is created.
+### 4.1 `08_FEE_RULES` — the policy, made machine-readable
 
-### Proposed delegation table
+One row per (fee type × child order × academic year). This table is the thing that
+does not exist today, and its absence is why 76 entitlements were typed out by hand
+as if they were decisions.
 
-The board sets the numbers; the shape is what matters.
+| Fee Type | Child Order | Relationship | Percentage | Academic Year | Policy Ref |
+| --- | --- | --- | --- | --- | --- |
+| Capital | 1 | Own child | 0% | 2026-2027 | §4.a |
+| Capital | 2 | Own child | 20% | 2026-2027 | §4.a |
+| Capital | 3 | Own child | 40% | 2026-2027 | §4.a |
+| Capital | 4+ | Own child | 60% | 2026-2027 | §4.a |
+| Tuition | 2 | Own child | 15% | 2026-2027 | §4.b |
 
-| Case | Decided by |
+The ladder changed from 25/50/75 to 0/20/40/60 between years and nothing in the
+file records that it changed, when, or by whose decision. Versioning it by academic
+year fixes that permanently, and makes every prior year auditable.
+
+> **To confirm before build:** the rows above are inferred from the *granted
+> percentages*, not from the fee policy document. The real ladder, the sibling
+> ladder, and how `(nephew)` / `(niece)` are treated must be read out of the policy
+> and entered here. This table is the foundation — it has to be right.
+
+### 4.2 What the form can answer without a human
+
+On submit, the script looks up each child, sorts them by enrolment order, and
+computes the entitlement from `08_FEE_RULES`. Then:
+
+| Case | Route |
 | --- | --- |
-| Discount already provided for in the fee policy | Nobody — finance applies it |
-| Late fee waiver ($50 / $100), first occurrence | Finance Manager |
-| Payment extension up to 30 days | Finance Manager |
-| Payment plan within the same academic year | CFO |
-| Discount ≤ 10% of one fee, one year, cost to school ≤ USD 1,000 | Head of School + CFO jointly |
-| Anything larger, any multi-year commitment, any precedent-setting case | **Board** |
+| Ask **≤** computed entitlement | **Auto-resolved.** Parent is told what policy gives them, same day. No review, no decision. |
+| Ask **>** entitlement | Only the **gap** goes to review. |
 
-Every delegated decision is still recorded in the same register with the same ID.
-The only difference is the value of `Decided By`.
+On this year's figures that removes roughly half the caseload from human hands
+before anyone reads a word.
+
+### 4.3 Delegation on the gap
+
+The board sets the numbers; the shape is the point.
+
+| The gap above entitlement | Decided by |
+| --- | --- |
+| None — ask is within policy | Nobody. Automatic. |
+| Late fee waiver, first occurrence · payment extension ≤ 30 days | Finance Manager |
+| Payment plan within the academic year | CFO |
+| ≤ 10 percentage points on one fee, one year, cost ≤ USD 1,000 | Head of School + CFO |
+| Larger · any multi-year commitment · any precedent-setting case | **Board** |
+
+Every delegated decision is recorded in the same register with the same ID. Only
+`Decided By` differs.
 
 ---
 
-## 5. Workbook structure
+## 5. Three tables, because a request is a family
 
-One workbook. Nine tabs. Only **one** of them is edited by hand.
+| Tab | Grain | Rows this year (est.) |
+| --- | --- | --- |
+| `02_REQUESTS` | one per family request | ~120 |
+| `03_REQUEST_STUDENTS` | one per child named in the request | ~200 |
+| `04_DECISION_LINES` | one per child × fee type | ~350 |
+
+### 5.1 `02_REQUESTS`
+
+**Identity** — `Request ID` · `Submitted At` · `Channel` · `Academic Year` ·
+`Revision No` · `Supersedes` · `Appeal Of` · `Status` · `Decision` ·
+`Days in Stage`
+
+**Family** — `Guardian Name` · `Relationship` · `Email` · `Phone` · `Language` ·
+`Campus` · `Children in Request` (formula)
+
+**The ask** — `Request Type` · `Reason Category` · `Parent Statement` ·
+`Documents` · `Ask Summary`
+
+**Computed** — `Policy Entitlement (USD)` · `Requested (USD)` ·
+**`Gap (USD)`** · `Within Policy?`
+
+**Review** — `Reviewed By` · `Review Date` · `Outstanding Balance` ·
+`Payment History` · `Years at School` · `Prior Requests` · `Precedent IDs` ·
+`Recommendation` · **`Cost to School (USD)`** · `Review Notes`
+
+**Decision** — `Decided By` · `Board Meeting Ref` · `Decision Date` · `Decision` ·
+`Conditions` · `Condition Met` · `Minute Link`
+
+**Fulfilment** — `Informed Date` · `Informed By` · `Informed Channel` ·
+`Letter Link` · `Finance Applied Date` · `Reconciled` (formula)
+
+**Outcome** — `Re-registered` · `Students Registered` · `Parent Response`
+
+**Legacy** — `Legacy Source` (which of the four registers it came from) ·
+`Legacy Notes`
+
+`Informed Date` is a real date set by the script that sends the letter — not
+twenty-one spellings of one sentence.
+
+### 5.2 `03_REQUEST_STUDENTS`
+
+`Request ID` · **`Student ID`** (mandatory, validated against the SIS) ·
+`Student Name` · `Grade` · `Campus` · `Relationship to Guardian`
+(own child / nephew / niece / other) · `Enrolment Status` (new / existing) ·
+`Child Order` (computed across the family) · `Years at School`
+
+`Child Order` drives the ladder, so it is computed once here and never retyped.
+`Relationship to Guardian` exists because the current data carries `(nephew)` and
+`(niece)` and nothing records whether they count toward the sibling ladder.
+
+### 5.3 `04_DECISION_LINES`
+
+`Line ID` · `Request ID` · `Student ID` · `Fee Type` · `Basis` · `Value` ·
+**`Authority`** · **`On Policy?`** (formula) · `Effective From` ·
+**`Effective To`** · `Conditions` · `Condition Met` · `Finance Ref` ·
+`Applied Value` · **`Variance`**
+
+Worked example — today this is one cell of prose; here it is six auditable rows:
+
+| Line | Student | Fee | Value | Authority | On policy? |
+| --- | --- | --- | --- | --- | --- |
+| `…/L1` | 107619 | Capital | 0% | Policy ladder | ✓ |
+| `…/L2` | 107621 | Capital | 20% | Policy ladder | ✓ |
+| `…/L3` | 107621 | Tuition | 15% | Sibling policy | ✓ |
+| `…/L4` | 107618 | Capital | 40% | Policy ladder | ✓ |
+| `…/L5` | 107618 | Tuition | 20% | Sibling policy | ✓ |
+| `…/L6` | 107618 | Tuition | 5% | **Board** | ✗ — the decision |
+
+Five entitlements and one decision. Today all six live in a single cell and the
+board reads all six. Filter `On Policy? = ✗` and the board's agenda is the last row.
+
+**`Authority`** is one of: Policy ladder · Sibling policy · Alumni · Referral ·
+Early/full payment · Group enrolment · Staff contract · Head of School · CFO ·
+Board · Chairwoman. All nine of these already exist in the data — as words inside
+prose, counted in [`analysis.md`](analysis.md) §7.
+
+**`Variance` = Applied − Value. It must be zero.**
+**`Effective To` is mandatory.** "Until graduation" becomes one line per year,
+renewed deliberately. There are 16 open-ended commitments in the file today.
+
+---
+
+## 6. Workbook structure
 
 | Tab | Purpose | Written by |
 | --- | --- | --- |
 | `00_README` | The rules, on one screen | IT, once |
-| `01_INTAKE` | Raw form responses — append-only, never edited | Google Form only |
-| `02_REQUESTS` | **The master register** — one row per request | Script + staff, band by band |
-| `03_DECISION_LINES` | One row per approved fee line | Secretary after the decision |
-| `04_BOARD_PACK` | What is on the next agenda | Formula only |
-| `05_TO_FINANCE` | Approved lines not yet applied | Formula only |
-| `06_PRECEDENT` | Reason × decision × typical value | Formula only |
-| `07_LOOKUPS` | Every dropdown list | IT |
-| `09_ARCHIVE_RAW` | Frozen copy of today's sheet | One-time, then read-only |
+| `01_INTAKE` | Raw form responses — append-only | Form |
+| `02_REQUESTS` | Master register, one row per family request | Script + staff |
+| `03_REQUEST_STUDENTS` | One row per child | Script, from the form |
+| `04_DECISION_LINES` | One row per child × fee | Secretary |
+| `05_BOARD_PACK` | `On Policy? = ✗` and above threshold | Formula |
+| `06_TO_FINANCE` | Approved lines not yet applied | Formula |
+| `07_PRECEDENT` | Reason × decision × typical value | Formula |
+| `08_FEE_RULES` | The fee policy, machine-readable, versioned by year | CFO |
+| `09_LOOKUPS` | Every dropdown | IT |
+| `10_ARCHIVE_RAW` | Frozen copy of the four legacy registers | Once, read-only |
 
-`02_REQUESTS` is protected band by band, so each role can edit only its own
-columns. Views are formulas, so they can never fall out of step with the register.
-
-### 5.1 Why decision lines are a separate tab
-
-A decision like *"75% tuition and capital, 100% enrolment"* is **three** things
-finance must enter. Putting them in one cell produces §1.1. Putting them in
-repeating column blocks produces *StudentSCL*'s 24-column layout, which cannot be
-aggregated.
-
-One row per fee line, each carrying the Request ID, is the shape finance needs and
-the shape that sums correctly:
-
-| Line ID | Request ID | Student ID | Fee Type | Basis | Value | Effective From | Effective To | Finance Ref | Applied Value | Variance |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| PR-2627-0042/L1 | PR-2627-0042 | 109322 | Tuition | Percentage | 75 | 2026-06-01 | 2027-05-31 | | | |
-| PR-2627-0042/L2 | PR-2627-0042 | 109322 | Capital | Percentage | 75 | 2026-06-01 | 2027-05-31 | | | |
-| PR-2627-0042/L3 | PR-2627-0042 | 109322 | Enrolment | Percentage | 100 | 2026-06-01 | 2027-05-31 | | | |
-
-`Variance = Applied Value − Value`. **It must be zero.** This is the control that
-would have caught Chan Derisa's missing capital-fee discount.
-
-`Effective To` is **mandatory**. No discount is open-ended. A multi-year award is
-recorded as one line per year, each renewed deliberately, which fixes §1.9.
+The scratch areas in the current file — bus pricing, fee scenario modelling,
+per-family working blocks — **do not come across.** They belong in a separate
+modelling workbook. A register is not a scratchpad.
 
 ---
 
-## 6. `02_REQUESTS` — columns, in six bands
+## 7. Status, and the thing that is not a status
 
-Column groups are collapsible, so each role works in one visible block.
+`Status` is where the request is. Numeric prefixes keep it sorted.
 
-### Band A — Identity (script-written, locked to everyone)
-
-`Request ID` · `Submitted At` · `Academic Year` · `Status` · `Decision` ·
-`Days in Stage` (formula) · `Supersedes` · `Appeal Of`
-
-### Band B — Parent & student (from the form)
-
-`Student ID` **(mandatory — the only join key)** · `Student Name` · `Grade` ·
-`Guardian Name` · `Relationship` · `Phone` · `Email` · `Language (KH/EN)` ·
-`Siblings at School`
-
-### Band C — The ask (from the form)
-
-`Request Type` · `Fee(s) Affected` · `Basis (Percentage / Fixed / Plan / Deferral / Waiver)` ·
-`Value Requested` · `Period From` · `Period To` · `Reason Category` ·
-`Parent Statement` · `Documents` (Drive folder link)
-
-### Band D — School review (Finance Officer)
-
-`Reviewed By` · `Review Date` · `Outstanding Balance` ·
-`Payment History (On time / Occasional late / In arrears)` · `Years at School` ·
-`Existing Discount %` · `Full Fee (USD)` · `Policy Reference` ·
-`Prior Requests` (formula, COUNTIFS on Student ID) · `Precedent IDs` ·
-`School Recommendation` · `Recommended Value` ·
-**`Cost to School (USD)`** (formula) · `Review Notes`
-
-`Cost to School` is the number the board actually needs and the number that is
-missing today.
-
-### Band E — Decision (Secretary / Head of School)
-
-`Decided By` · `Board Meeting Ref` · `Decision Date` · `Decision` ·
-`Conditions` · `Condition Met? (Yes / No / N/A)` · `Minute Link`
-
-The per-fee detail lives in `03_DECISION_LINES`, not here.
-`Condition Met?` fixes §1.5.
-
-### Band F — Fulfilment (Finance)
-
-`Parent Notified Date` · `Letter Link` · `Finance Applied Date` ·
-`Finance Applied By` · `Reconciled?` (formula: all lines variance = 0)
-
-### Band G — Legacy
-
-`Legacy Notes` — one column holding anything from the old sheet that maps nowhere.
-Nothing is ever discarded.
-
----
-
-## 7. Status model
-
-Two columns, not one. Mixing "where it is" with "what was decided" is what makes
-the current sheet unfilterable.
-
-**`Status` — where the request is.** Numeric prefixes so it sorts correctly:
-
-| Code | Status | Service standard |
+| Code | Status | Standard |
 | --- | --- | --- |
-| `10` | Submitted | acknowledged same day (automatic) |
-| `20` | Needs Info | parent has 10 working days, then auto-withdrawn |
-| `30` | In Review | 5 working days |
-| `40` | Ready for Board | — |
-| `50` | On Agenda | cut-off 7 days before the meeting |
-| `60` | Decided | 3 working days to notify |
-| `70` | Parent Notified | 3 working days to apply |
+| `10` | Submitted | acknowledged same day, automatic |
+| `15` | Auto-resolved within policy | same day, no human |
+| `20` | Needs Info | parent has 10 working days |
+| `30` | In Review | 3 working days in season |
+| `40` | Ready for Decision | — |
+| `50` | On Agenda | weekly sitting during the window |
+| `60` | Decided | 2 working days to inform |
+| `70` | Parent Informed | 3 working days to apply |
 | `80` | Applied in Finance | — |
 | `90` | Closed | — |
 | `95` | Withdrawn | — |
 
-**`Decision` — what was decided.** Blank until `Status ≥ 60`:
-`Approved` · `Approved with conditions` · `Declined` · `Deferred`
+`Decision` is separate and blank until `60`: Approved · Approved with conditions ·
+Declined · Deferred.
 
-### The four filters that run the process
-
-| Who | Filter |
-| --- | --- |
-| Front desk | `Status = 10` |
-| Finance review | `Status = 30` |
-| Board secretary | `Status = 40` |
-| Finance entry | `Status = 70` |
-| Anyone, weekly | `Days in Stage > service standard` |
-| Monthly | `Variance ≠ 0` |
+**`Re-registered` is not a status.** Whether the family re-enrolled is an outcome,
+recorded in its own field. In the current file it is mixed into `STATUS` and
+spelled five different ways.
 
 ---
 
-## 8. The flow
+## 8. Built for the surge
 
-```
-              Parent submits the form  (Khmer + English, one form)
-                          │
-         [script]  ID assigned · Drive folder created · parent emailed        same day
-                          │
-              Front desk: completeness check                                  2 working days
-                          │
-            ┌─────────────┴──────────────┐
-      incomplete                     complete
-            │                            │
-      20 Needs Info                      │
-      10 working days                    │
-      no reply → 95 Withdrawn            │
-                                         │
-              Finance Officer: review band filled                             5 working days
-                          │
-            ┌─────────────┴──────────────┐
-   within delegated authority      above threshold
-            │                            │
-   Head of School / CFO decides    40 Ready for Board
-      3 working days                     │
-            │                   cut-off 7 days before meeting
-            │                            │
-            │                     Board decides                               monthly
-            └─────────────┬──────────────┘
-                          │
-              60 Decided → decision lines written, letter sent                3 working days
-                          │
-              70 Parent Notified
-                          │
-              Finance applies, writes PR-ID into the reference field           3 working days
-                          │
-              80 Applied in Finance
-                          │
-              Monthly reconciliation: every variance must be zero
-                          │
-              90 Closed
-```
+All 128 dated requests this year fall between 3 March and 7 May — 63 in March,
+57 in April. About 120 family requests in ten weeks. A monthly cycle cannot absorb
+that, and pretending otherwise is why policy was applied and called a decision.
+
+| | |
+| --- | --- |
+| **Window** | Published open and close dates, aligned to re-registration |
+| **Auto-resolution** | Within-policy asks answered same day by script — roughly half |
+| **Review** | 3 working days in season, 5 out of season |
+| **Sittings** | Weekly during the window, monthly outside it |
+| **Board pack** | Only `On Policy? = ✗` above threshold — on this year's data, tens of lines, not hundreds |
+| **Cut-off** | 3 days before each sitting during the window |
 
 ---
 
 ## 9. The link to the finance app
 
-This is the whole point of the ID, and it needs **two** controls — one in each
-direction. One alone is not enough.
+Two controls, one in each direction. Either alone leaves a hole.
 
-**Control 1 — forward.** No discount is entered in the finance app without a
-Request ID in its reference or memo field. No ID, no discount. This is a finance
-office rule, enforced by finance.
+**Forward.** No discount is entered without a Request ID in its reference field.
+No ID, no discount.
 
-**Control 2 — reverse.** Monthly, export every discount line from the finance app
-and match on Request ID:
+**Reverse.** Monthly, export every discount line and match on Request ID:
 
 | Finding | Meaning | Action |
 | --- | --- | --- |
-| Finance line with no Request ID | Unauthorised discount | Investigate, then regularise or reverse |
-| Approved line with no finance line | Granted but never applied | Apply it — the family will chase eventually |
+| Finance line, no Request ID | Unauthorised discount | Investigate; regularise or reverse |
+| Approved line, no finance line | Granted, never applied | Apply it |
 | Values differ | `Variance ≠ 0` | Correct one side, record which |
-| Effective-to date passed, discount still live | Expired award still running | Renew deliberately or stop |
+| Past `Effective To`, still live | Expired award still running | Renew deliberately, or stop |
 
-On the evidence in §1.2, this will find things in the first month.
-
-> **Open dependency.** The design assumes a discount line in the finance app has a
-> free-text reference or memo field that can hold `PR-2627-0042`. If it does not,
-> the join must be made through a mapping tab keyed on the finance app's own line
-> ID — workable, but weaker, because nothing then stops an unreferenced discount
-> being created. This needs confirming before build.
+Entitlement lines carry a Request ID too, so a policy discount is as traceable as a
+board grant.
 
 ---
 
-## 10. Precedent — making the next decision easier
+## 10. Migration
 
-`06_PRECEDENT` is a pivot over decided requests:
-
-| Reason Category | Requests | Approved | Declined | Median approved % | Range |
-| --- | --- | --- | --- | --- | --- |
-| Loss of income | 14 | 9 | 5 | 25% | 10–50% |
-| Medical hardship | 6 | 6 | 0 | 50% | 25–75% |
-| Multiple children | 11 | 7 | 4 | 15% | 10–25% |
-
-Plus, on every open request, `Prior Requests` and `Precedent IDs` so the board can
-see at a glance what was done in comparable cases. Consistency stops being a
-matter of memory.
-
----
-
-## 11. Access
-
-| Role | Access |
-| --- | --- |
-| Parents | The form only. No access to the workbook at all. |
-| Front desk / Admissions | Edit band A status + band B |
-| Finance Officer | Edit bands D and F |
-| CFO / Head of School | Edit band E, plus everything above |
-| Board | `04_BOARD_PACK` view only — never the register |
-| IT | Owner |
-
-Protected ranges per band. Views are formula-driven, so they cannot be edited out
-of step with the register.
-
----
-
-## 12. Migrating the existing data
+Four registers, 361 rows, four schemas. Nothing is deleted.
 
 | Phase | Work | Days |
 | --- | --- | --- |
-| 0 | **Freeze.** Copy the current sheet to `09_ARCHIVE_RAW`, never edit it again. | 1 |
-| 1 | **Map columns.** Every existing column to a new field; anything that maps nowhere goes to `Legacy Notes`. Nothing is discarded. | 1–2 |
-| 2 | **Backfill IDs.** Sort by date (or existing row order where no date exists); assign `PR-2526-nnnn` and `PR-2627-nnnn`. Write the ID back into the archive copy too, so old and new stay tied. | 2 |
-| 3 | **Resolve students.** Match every row to a Student ID from the SIS. Match on ID where present; a name-only row is a manual match. Unmatched rows go to `EXCEPTIONS`. **Do not guess** — see §1.4. | 3–4 |
-| 4 | **Normalise decisions.** Split each prose decision into decision lines. This needs a person who knows the cases — budget a working session with finance and whoever ran the scholarship committee, not an afternoon of typing. | 4–6 |
-| 5 | **Reconcile against finance.** For every backfilled line, find the matching discount. Three buckets: matched / approved-not-applied / applied-not-approved. Take the third bucket to the board. | 6–8 |
-| 6 | **Go live.** Form opens, old sheet read-only, `00_README` states the rule: no request outside the form, no discount without a Request ID. | 8 |
-| 7 | **First monthly reconciliation.** Prove the loop closes. | +30 |
+| 0 | **Freeze.** Copy the workbook to `10_ARCHIVE_RAW`; never edit it again. | 1 |
+| 1 | **Write `08_FEE_RULES` from the fee policy.** Not from the granted percentages — from the policy document, per academic year back to 2023. Everything else depends on this. | 2 |
+| 2 | **Map four schemas to one.** Each register keeps a `Legacy Source` tag. Anything unmappable goes to `Legacy Notes`; nothing is discarded. | 2 |
+| 3 | **Backfill IDs.** `PR-2425-nnnn` … `PR-2627-nnnn` by date. Write the ID back into the archive copy so old and new stay tied. | 1 |
+| 4 | **Split families into children.** 82 multi-child rows become student rows. Resolve every child to a Student ID; 85% of rows currently have no usable one. Name-only children are a manual match against the SIS — **do not guess**. Unmatched go to `EXCEPTIONS`. | 5–7 |
+| 5 | **Split prose into decision lines**, tagging each with its `Authority` and letting `On Policy?` compute. This is where the 29 off-ladder grants surface. Needs finance plus whoever holds the policy history — a working session, not typing. | 5–7 |
+| 6 | **Reconcile against the finance app.** Three buckets: matched, approved-not-applied, applied-not-approved. Take the third to the board. | 3 |
+| 7 | **Go live** before the March window. Form opens, old file read-only, one rule posted: no request outside the form, no discount without a Request ID. | 1 |
+| 8 | **First monthly reconciliation.** Prove the loop closes. | +30 |
+
+Realistically three to four weeks of elapsed work, most of it in phases 4 and 5,
+and most of that other people's time rather than build time.
+
+**Timing:** requests start in early March. Everything must be live by **February**,
+which means starting the policy table (phase 1) now.
 
 ---
 
-## 13. Build order
+## 11. Build order
 
 | # | Item | Effort |
 | --- | --- | --- |
-| 1 | Workbook skeleton, lookups, protections, conditional formatting | 0.5 day |
-| 2 | Google Form (Khmer + English) + intake script: ID, Drive folder, acknowledgement email | 1 day |
-| 3 | Board pack, to-finance and precedent views | 0.5 day |
-| 4 | Parent letter templates driven off the row, reusing the `step1`–`step5` HTML pattern already in use for tuition follow-up | 0.5 day |
-| 5 | Legacy migration | per §12 |
-| 6 | Monthly reconciliation script | 0.5 day |
+| 1 | `08_FEE_RULES` + the entitlement calculator | 1 day |
+| 2 | Google Form (Khmer + English), repeating child block, Student ID validated against the SIS | 1.5 days |
+| 3 | Intake script: ID, folder, child rows, entitlement computed, acknowledgement stating what policy gives | 1.5 days |
+| 4 | Workbook skeleton, lookups, protections, conditional formatting | 0.5 day |
+| 5 | Board pack, to-finance, precedent views | 0.5 day |
+| 6 | Letter templates driven off the row, reusing the `step1`–`step5` HTML pattern already in use for tuition follow-up | 0.5 day |
+| 7 | Monthly reconciliation script | 0.5 day |
 
 ---
 
-## 14. Fit with the tuition follow-up ladder
+## 12. Fit with the tuition follow-up ladder
 
-The existing *Tuition Payment Follow-Up — 5 Step Process* leaves an open question:
-a family in genuine difficulty has no route except withdrawal, because Step 4
-removes the payment-plan offer.
-
-This register is that route. One line in the Step 4 letter — *hardship may be
-raised with the Head of School before the Step 5 date* — points at the form, and
-the request enters this flow with a Request ID like any other. The collections
-ladder and the discretionary route stop being two disconnected processes.
+The existing *Tuition Payment Follow-Up* process leaves a gap: because Step 4
+withdraws the payment-plan offer, a family in genuine difficulty has no route but
+withdrawal. This register is that route. One line in the Step 4 letter — *hardship
+may be raised with the Head of School before the Step 5 date* — points at the form,
+and the request enters this flow with an ID like any other.
 
 ---
 
-## 15. Decisions needed before build
+## 13. Decisions needed before building
 
-1. **Sheet access.** Share the parent-requests sheet with `headofit@paragon.com.kh`
-   (view is enough) so §1 can be redone against the real data.
-2. **Finance app reference field.** Confirm the app's name and whether a discount
-   line carries a free-text reference. This is the one hard dependency (§9).
-3. **Delegation thresholds.** Board to set the numbers in §4.
-4. **Rule vs exception.** Confirm which of these are policy rules, not decisions:
-   sibling discount, staff-child discount, enrolment-fee waiver for scholarship
-   holders. §1.2 suggests the third is being applied as a rule but recorded as a
-   decision.
-5. **Consolidation.** Decide whether *Pathway Scholarship*, *StudentSCL*,
-   *Siblings* and *Student Fee Review* fold into this register or stay separate
-   and feed it. Four sources of truth is the reason reconciliation is impossible
-   today.
+1. **The fee policy tables.** The real ladders for capital, tuition and sibling
+   discount, per academic year, and how `(nephew)` / `(niece)` count. Everything
+   depends on `08_FEE_RULES` being right.
+2. **Finance app reference field.** Confirmed as workable — the exact field name
+   and whether entitlement lines can carry a Request ID as well as exceptions.
+3. **Delegation thresholds.** The numbers in §4.3.
+4. **Who owns the register.** It sits with `finance-officer@` today. The register
+   spans campuses and divisions; one owner, with bands protected per role.
+5. **The other four sheets.** *Pathway Scholarship*, *StudentSCL*, *Siblings*,
+   *Student Fee Review* — fold in, or stay separate and feed it.
+6. **The scratch areas.** Confirm bus pricing, fee scenario modelling and the
+   per-family working blocks move to a separate modelling workbook.
