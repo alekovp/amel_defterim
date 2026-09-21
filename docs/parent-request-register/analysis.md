@@ -242,3 +242,118 @@ than one request in ten.
 | 9 `FINAL DECISION` rows, 32 families across multiple rows | Negotiation is normal. Version it on the same Request ID rather than appending rows. |
 | Informed date in 21 prose spellings | Real date fields, entered by a script when the letter is sent. |
 | 16 open-ended commitments | `Effective To` mandatory on every line; "until graduation" becomes one line per year. |
+
+---
+
+## 10. The four registers are four academic years
+
+They are not four campuses or four divisions. They are one register per year,
+rebuilt from scratch each year with a different schema.
+
+| Register | Academic year | Rows | Cols | Dated rows | Usable single Student IDs | Decision filled |
+| --- | --- | --- | --- | --- | --- | --- |
+| **D** | 2023-2024 (+13 rows of 2024-2025) | 52 | 11 | 47 | 16 (31%) | 37 (71%) |
+| **C** | 2024-2025 | 37 | 12 | 31 | 18 (49%) | 27 (73%) |
+| **B** | 2025-2026 | 136 | 18 | 119 | 21 (15%) | 133 (98%) |
+| **A** | 2026-2027 | 136 | 18 | 128 | 20 (15%) | 136 (100%) |
+
+Three things follow immediately.
+
+**Volume has nearly quadrupled in two years** — 37 requests in 2024-2025, 136 in
+each of the last two. Whatever is built has to hold at 200+.
+
+**2024-2025 is split across two sheets.** Register C holds 33 rows of it and
+Register D holds 13. The academic year is not reliably the register it sits in.
+
+**The academic year column is 82% blank in the current register** (`Requested AY`,
+25 of 136 filled) because the register *is* the year. That works until the moment
+anyone needs to ask a question across years — which is exactly the question the
+board asks about every returning family.
+
+### 10.1 The years cannot be joined
+
+The same families come back. The name tokens prove it: **126 surnames are shared
+between the 2025-2026 and 2026-2027 registers.**
+
+The Student IDs do not:
+
+| Pair | Shared Student IDs |
+| --- | --- |
+| 2026-2027 ∩ 2025-2026 | 13 |
+| 2025-2026 ∩ 2024-2025 | **0** |
+| 2024-2025 ∩ 2023-2024 | 3 |
+| 2025-2026 ∩ 2023-2024 | **0** |
+
+126 shared surnames and 13 shared IDs. The families are returning; the key that
+would prove it is not being written down.
+
+### 10.2 `Dicision (Last Year)` is the workaround, and it disagrees with last year
+
+The 2026-2027 register carries a `Dicision  (Last Year)` column, filled on **82 of
+136 rows (60%)**. It exists because the years cannot be joined, so last year's
+answer is retyped by hand.
+
+Matching those 82 back against the 2025-2026 register's own `Decision` column:
+
+| Result | Rows |
+| --- | --- |
+| Exact text match | 1 |
+| Close match (≥72% similar) | 13 |
+| **No match at all** | **68** |
+
+Only 14 of 82 can be traced back to what the previous year's register actually
+records. Part of the explanation is benign and just as damaging: **63% of
+2025-2026 decisions were stored as `- Capital Fee based on below table`**, which
+carries no value at all, so this year's officer had to reconstruct the number from
+somewhere outside the register.
+
+Either way, the register's own history column and the register's own history do not
+agree, and nothing can reconcile them mechanically.
+
+### 10.3 Campus is a per-child attribute forced onto a family row
+
+Fourteen distinct spellings across the three registers that record it, for what are
+really three campuses:
+
+- `KG-Primary` · `KG and Primary` · `KG- PRIMARY` · `Primary and KG` — four
+  spellings of one thing
+- `Priamry`, `Kindergarten` vs `KG` — typo and variant
+- **42 rows carry a multi-campus value** — `Primary-Secondary`, `Secondary-KG`,
+  `Primary & Secondary`, `All Campus` — because one family's children sit in
+  different campuses
+
+Campus belongs on the child, not the request. The family row derives it.
+
+### 10.4 The `HO` column is the Head of School asking for data that should already be there
+
+Present in registers B, C and D (dropped in A), filled on 40 rows. It holds
+questions, not decisions:
+
+```
+Pls share the policy here
+what is the tuition fee of Kouch Chan Moniyuth.?
+number of absence days?  5% discount
+Academic achievemnts? 30% discount?
+What percentage of discount does she pay for her own kids?
+Will you calculate x1,1 change of the campus instead of x1,2
+5%-10% might be the discount?
+```
+
+Counting what is being asked for across C and D: the current or prior fee (5), the
+policy itself (5), the campus-change multiplier (3), what a staff member's own
+children get (2), absence days, academic achievement.
+
+Every one of those is a fact that should have been on the request before the Head
+of School ever opened it. They are the specification for the review band.
+
+### 10.5 What this adds to the design
+
+| Finding | Consequence |
+| --- | --- |
+| Four years, four schemas, one year split across two sheets | One register, `Academic Year` as a **column**, `Legacy Source` tagging where each row came from. Never a new sheet per year again. |
+| 126 shared surnames, 13 shared Student IDs | Student ID is the migration's hardest job and the register's whole point. |
+| `Dicision (Last Year)` matches last year on 14 of 82 rows | The column **does not migrate**. It becomes a formula: look up prior decisions by Student ID. Retyping is what produced the disagreement. |
+| 63% of last year's decisions were a pointer with no value | A decision line must carry the value. Never a reference to a table. |
+| 42 rows span multiple campuses | Campus lives on `03_REQUEST_STUDENTS`. |
+| The `HO` column is a request for missing facts | The review band pre-fills them: current and prior fee, existing discount, years at school, absence days, merit flag, payment history, siblings, prior decisions. |
+| 37 → 136 requests in two years | Build for 200+, and for the ten-week window. |

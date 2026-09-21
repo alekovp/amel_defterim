@@ -1,0 +1,34 @@
+target_tab,target_field,reg_D_2023_2024,reg_C_2024_2025,reg_B_2025_2026,reg_A_2026_2027,migration_note
+02_REQUESTS,Request ID,,,,,generated: PR-2324-nnnn / PR-2425-nnnn / PR-2526-nnnn / PR-2627-nnnn by date order
+02_REQUESTS,Academic Year,Academic Year,Academic Year,Academic Year,Requested AY,"A is 82% blank; take the year from the register itself, not the column"
+02_REQUESTS,Legacy Source,,,,,"tag every row: Register D / C / B / A"
+02_REQUESTS,Submitted At,Request Date,Request Date,Request Date,Request Date,"parse to real dates; D 47/52, C 31/37, B 119/136, A 128/136 populated"
+02_REQUESTS,Channel,,,,Requested Via,only A records it; 133 of 136 are Email. Default the other years to Email
+02_REQUESTS,Guardian Name,Parent / Gurdian,Parent / Gurdian,Parent / Gurdian,,"A dropped this column; recover the guardian from the email address in Requested Via"
+02_REQUESTS,Email,,,,Requested Via,parse out of the free-text cell
+02_REQUESTS,Parent Statement,Request and Description,Request and Description,Request and Description,Request and Description,clean 1:1 across all four years
+02_REQUESTS,Reason Category,,,,,derive by reading Request and Description; not recorded anywhere today
+02_REQUESTS,Review Notes,Comments or suggestion,Comments or suggestion,Comments or suggestion,Comments or suggestion,"fill rate 67% / 51% / 19% / 11% - declining"
+02_REQUESTS,HoS Query,HO,HO,HO,,"Head of School questions; 17 / 17 / 6 rows. A dropped the column"
+02_REQUESTS,Decision,Decision,Decision,Decision,Decision 2026-2027,"prose; split into 04_DECISION_LINES. B is 63% 'based on below table' with no value"
+02_REQUESTS,Decided By,,,,,derive from the authority words inside the decision prose
+02_REQUESTS,Informed Date,,,INFORMED TO THE PARENTS,INFORMED TO THE PARENTS,"parse the date out of 'Informed parent Mar 27, 2026'; 21 spellings in A"
+02_REQUESTS,Re-registered,,,STATUS,STATUS,"outcome not status; normalise 5 spellings of Registered"
+02_REQUESTS,Students Registered,,,No. students Registered,No. students Registered,3% filled in both
+02_REQUESTS,Parent Response,,,,Parent's Feedback/Response,4% filled
+02_REQUESTS,Prior Year Decision,,,,Dicision  (Last Year),"DO NOT MIGRATE. Becomes a formula on Student ID. Only 14 of 82 match the prior year's own register"
+02_REQUESTS,Legacy Notes,,,,,anything that maps nowhere; nothing is discarded
+03_REQUEST_STUDENTS,Student ID,Student Id,Student Id,Student Id,Student ID,"usable single IDs: 16 / 18 / 21 / 20. Split multi-ID cells; manual SIS match for the rest"
+03_REQUEST_STUDENTS,Student Name,Student Name,Student Name,Student Name,Student Name,"split multi-child cells: 82 of 135 in A name more than one child"
+03_REQUEST_STUDENTS,Grade,,,,,embedded in the name cell as a trailing number - parse it out
+03_REQUEST_STUDENTS,Campus,Secondary,Campus,Campus,Division,"D's header is mislabelled 'Secondary' but holds Primary/KG too. A is 0% filled. 42 rows hold multi-campus values - split per child"
+03_REQUEST_STUDENTS,Relationship to Guardian,,,,,"parse (nephew) / (niece) out of the name cell"
+03_REQUEST_STUDENTS,Enrolment Status,,,,Student Status,only A has it; 15% filled
+03_REQUEST_STUDENTS,Child Order,,,,,computed across the family; drives the fee ladder
+04_DECISION_LINES,Fee Type,Decision,Decision,Decision,Decision 2026-2027,"parse: capital 280 / tuition 208 / registration 24 / enrolment 6 mentions in A"
+04_DECISION_LINES,Value,Decision,Decision,Decision,Decision 2026-2027,parse the percentage per child per fee
+04_DECISION_LINES,Authority,Decision,Decision,Decision,Decision 2026-2027,"parse: sibling / Board / policy ladder / alumni / staff / referral / early payment / HoS / Chairwoman"
+04_DECISION_LINES,On Policy,,,,,computed against 08_FEE_RULES for that academic year
+04_DECISION_LINES,Effective From,,,,,default to the academic year start
+04_DECISION_LINES,Effective To,,,,,"default to the academic year end; 16 rows say 'until graduation' - one line per year instead"
+08_FEE_RULES,all fields,,,,,"NOT in this file. Must be entered from the fee policy document, per academic year, back to 2023"
