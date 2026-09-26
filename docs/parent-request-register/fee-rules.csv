@@ -6,27 +6,32 @@ Fee,Enrolment,KG-G12,,1500,USD,2026-2027,yes,,confirmed,paragonisc.edu.kh/fees,o
 Fee,Registration,All,,850,USD,2026-2027,yes,,confirmed,paragonisc.edu.kh/fees,annually in full before attending
 Fee,Capital,Toddler-PreK,,600,USD,2026-2027,yes,,confirmed,paragonisc.edu.kh/fees,annually in two instalments
 Fee,Capital,KG-G12,,1200,USD,2026-2027,yes,,confirmed,paragonisc.edu.kh/fees,annually in two instalments
-Fee,Tuition,by grade,,,USD,2026-2027,yes,,TO ENTER,fees page PDFs,Bilingual and International programme PDFs; amounts not on the page itself
-Discount,Tuition,child 2,Own child,10,percent,2026-2027,yes,15,CONFLICT,paragonisc.edu.kh/fees,"published 10%; 15% granted 27 times and 20% granted 16 times in 2026-2027. 10% granted only 6 times"
-Discount,Tuition,child 3,Own child,15,percent,2026-2027,yes,,CONFIRM,paragonisc.edu.kh/fees,published sibling rate for third child
-Discount,Tuition,child 4+,Own child,20,percent,2026-2027,yes,,CONFIRM,paragonisc.edu.kh/fees,published sibling rate for further children
-Discount,Tuition,child 1,Alumni,10,percent,2026-2027,yes,10,matches,paragonisc.edu.kh/fees,"Paragon or Zaman alumni; 10% granted 12 times - published and practice agree"
+Fee,Tuition,by grade,,,USD,2026-2027,yes,,confirmed,fees page PDFs,"see tuition-fees.csv - both programmes, three payment plans"
+Discount,Tuition,child 2,Own child,10,percent,2026-2027,yes,15,CONFIRMED 10% - practice was 15%,paragonisc.edu.kh/fees,Owner confirmed 10% second child / 15% third. 17 verified cases granted 15% to a second child (child order confirmed by the 20% capital-ladder position on the same child)
+Discount,Tuition,child 3,Own child,15,percent,2026-2027,yes,,confirmed,paragonisc.edu.kh/fees,owner confirmed 15% for the third child
+Discount,Tuition,child 4+,Own child,20,percent,2026-2027,yes,,CONFIRM,paragonisc.edu.kh/fees,published 20%; 6 verified cases granted only 15% to a fourth child - under policy
+Discount,Tuition,child 1,Alumni,10,percent,2026-2027,yes,10,matches,paragonisc.edu.kh/fees,Paragon or Zaman alumni; 10% granted 12 times - published and practice agree
 Discount,Tuition,new student,Referral,250,USD,2026-2027,yes,250,matches,paragonisc.edu.kh/fees,off tuition on first billing
 Credit,Referral,referrer,,500,USD,2026-2027,yes,500,matches,paragonisc.edu.kh/fees,per student referred; discount or cash
-Discount,Capital,child 1,Own child,0,percent,2026-2027,NO,0,UNPUBLISHED,register prose,"ladder recorded in the register as Policy: 0 20% 40% 60% - appears nowhere on the fees page"
+Discount,Capital,child 1,Own child,0,percent,2026-2027,NO,0,UNPUBLISHED,register prose,ladder recorded in the register as Policy: 0 20% 40% 60% - appears nowhere on the fees page
 Discount,Capital,child 2,Own child,20,percent,2026-2027,NO,20,UNPUBLISHED,register prose,42 grants at 20% this year
-Discount,Capital,child 3,Own child,40,percent,2026-2027,NO,40,UNPUBLISHED,register prose,10 grants at 40% this year
+Discount,Capital,child 3,Own child,40,percent,2026-2027,NO,40,confirmed,register prose,owner confirmed 15% for the third child
 Discount,Capital,child 4+,Own child,60,percent,2026-2027,NO,60,UNPUBLISHED,register prose,15 grants at 60% this year
 Discount,Capital,child 2,Own child,25,percent,2025-2026,NO,25,SUPERSEDED,register prose,"prior-year ladder was 25/50/75; 57 grants at 25%, 48 at 50%, 14 at 75%"
-Discount,Tuition and Capital,all,Full payment,6,percent,2026-2027,NO,6,UNPUBLISHED,register prose,"4 mentions; also quoted to a parent as 'we offer 6% for early payment'"
-Discount,Tuition and Capital,all,Early payment,4,percent,2026-2027,NO,4,UNPUBLISHED,register prose,5 mentions; often stacked as an extra on top of the capital discount
-Discount,Tuition and Capital,all,Staff contract,80,percent,2026-2027,NO,80,UNPUBLISHED,register prose,"'staff discount policy' referenced but not published; 80% and 85% both granted"
+Discount,Tuition and Capital,all,Full payment,6,percent,2026-2027,in PDF,6,CORRECTED - is published,tuition fee PDFs,"published in the tuition PDFs as a date ladder, not on the fees page body"
+Discount,Tuition and Capital,all,Early payment,4,percent,2026-2027,in PDF,4,CORRECTED - is published,tuition fee PDFs,"published in the tuition PDFs as a date ladder, not on the fees page body"
+Discount,Tuition and Capital,all,Staff contract,80,percent,2026-2027,NO,80,UNPUBLISHED,register prose,'staff discount policy' referenced but not published; 80% and 85% both granted
 Discount,Registration,all,Staff contract,50,percent,2026-2027,NO,50,UNPUBLISHED,register prose,granted alongside the 80% staff tuition rate
-Charge,Late payment,overdue < 30 days,,50,USD,2026-2027,NO,50,UNPUBLISHED,tuition follow-up letters,"cited as fee policy 3(c); not on the fees page"
-Charge,Late payment,overdue > 30 days,,100,USD,2026-2027,NO,100,UNPUBLISHED,tuition follow-up letters,"cited as fee policy 3(d); not on the fees page"
-Topup,Tuition,discretionary,Board,5,percent,2026-2027,NO,5,DECISION,register prose,"28 grants at 5% - the single most common Finance Committee decision"
+Charge,Late payment,overdue < 30 days,,50,USD,2026-2027,NO,50,UNPUBLISHED,tuition follow-up letters,cited as fee policy 3(c); not on the fees page
+Charge,Late payment,overdue > 30 days,,100,USD,2026-2027,NO,100,UNPUBLISHED,tuition follow-up letters,cited as fee policy 3(d); not on the fees page
+Topup,Tuition,discretionary,Board,5,percent,2026-2027,NO,5,DECISION,register prose,28 grants at 5% - the single most common Finance Committee decision
 Topup,Tuition,discretionary,Board,2,percent,2026-2027,NO,2,DECISION,register prose,20 grants at 2%
 Topup,Tuition,discretionary,Board,10,percent,2026-2027,NO,10,DECISION,register prose,7 grants at 10%
 Topup,Tuition,discretionary,Head of School,5,percent,2026-2027,NO,5,DECISION,register prose,2 grants at 5%
-Topup,Various,discretionary,Chairwoman,10-50,percent,2026-2027,NO,,DECISION,register prose,"'Scholarship for Public Servants (Political Scholarship) from Chairwoman - 10% to 50%'"
+Topup,Various,discretionary,Chairwoman,10-50,percent,2026-2027,NO,,DECISION,register prose,'Scholarship for Public Servants (Political Scholarship) from Chairwoman - 10% to 50%'
 Policy,Refund and withdrawal,,,,,2026-2027,NO,,MISSING,,not published and not found in the register
+Discount,Tuition and Capital,by date,Full payment,6,percent,2026-2027,in PDF,6,confirmed,tuition fee PDFs,paid in full by 31 March 2026
+Discount,Tuition and Capital,by date,Full payment,4,percent,2026-2027,in PDF,4,confirmed,tuition fee PDFs,paid in full by 30 April 2026
+Discount,Tuition and Capital,by date,Full payment,2,percent,2026-2027,in PDF,2,confirmed,tuition fee PDFs,paid in full by 31 May 2026. NOTE collides with the 2% Board top-up in the register - 20 grants labelled Board 2% must be disambiguated
+Surcharge,Tuition,2 instalments,,3,percent,2026-2027,in PDF,,confirmed,tuition fee PDFs,instalment totals exceed the full-payment price by ~3%; the register prices requests off this base
+Surcharge,Tuition,4 instalments,,5,percent,2026-2027,in PDF,,confirmed,tuition fee PDFs,instalment totals exceed the full-payment price by ~5%

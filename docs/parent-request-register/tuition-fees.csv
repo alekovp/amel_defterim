@@ -1,0 +1,15 @@
+programme,grade_band,grades,tuition_full_payment,tuition_2inst_each,tuition_2inst_total,tuition_4inst_each,tuition_4inst_total,capital_full,capital_2inst_each,academic_year,source
+Bilingual,Toddler/Nursery Half Day,Toddler-Nursery,4750,2450,4900,1250,5000,,,2026-2027,1-Bilingual.pdf
+Bilingual,Toddler/Nursery Full Day,Toddler-Nursery,5610,2890,5780,1470,5880,600,300,2026-2027,1-Bilingual.pdf
+Bilingual,Pre-KG / KG,Pre-KG;KG,7020,3620,7240,1840,7360,600,300,2026-2027,1-Bilingual.pdf
+Bilingual,Grades 1-3,1;2;3,8600,4430,8860,2260,9040,1200,600,2026-2027,1-Bilingual.pdf
+Bilingual,Grades 4-6,4;5;6,8950,4610,9220,2350,9400,1200,600,2026-2027,1-Bilingual.pdf
+Bilingual,Grades 7-9,7;8;9,10480,5400,10800,2750,11000,1200,600,2026-2027,1-Bilingual.pdf
+Bilingual,Grades 10-12,10;11;12,10910,5620,11240,2860,11440,1200,600,2026-2027,1-Bilingual.pdf
+International,Toddler/Nursery Half Day,Toddler-Nursery,4750,2450,4900,1250,5000,,,2026-2027,2-International.pdf
+International,Toddler/Nursery Full Day,Toddler-Nursery,5610,2890,5780,1470,5880,600,300,2026-2027,2-International.pdf
+International,Pre-KG / KG,Pre-KG;KG,7020,3620,7240,1840,7360,600,300,2026-2027,2-International.pdf
+International,Grades 1-3,1;2;3,12620,6500,13000,3310,13240,1200,600,2026-2027,2-International.pdf
+International,Grades 4-6,4;5;6,13430,6920,13840,3530,14120,1200,600,2026-2027,2-International.pdf
+International,Grades 7-9,7;8;9,14490,7460,14920,3800,15200,1200,600,2026-2027,2-International.pdf
+International,Grades 10-12,10;11;12,15280,7870,15740,4010,16040,1200,600,2026-2027,2-International.pdf
