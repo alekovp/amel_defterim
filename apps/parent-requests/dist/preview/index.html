@@ -1446,7 +1446,10 @@
     document.getElementById('shell').hidden = true;
     document.getElementById('mini').hidden = true;
     var d = document.getElementById('done');
-    var h = '<div class="card"><h2>' + esc(t('doneTitle')) + '</h2><div class="hint">' + esc(t('doneRef')) + '</div>' +
+    var h = '<div class="card">' +
+      (res.preview ? '<div class="summary" style="background:var(--warn-soft);color:var(--warn);margin-bottom:20px"><b>Preview — nothing was sent.</b> ' +
+        'No request was recorded and no email went out. Below is what a family would see after a real submission.</div>' : '') +
+      '<h2>' + esc(t('doneTitle')) + '</h2><div class="hint">' + esc(t('doneRef')) + '</div>' +
       '<div class="ref">' + esc(res.requestId) + (res.preview ? ' <span class="chip mid" style="vertical-align:middle">example</span>' : '') + '</div>' +
       '<p>' + esc(t('doneBody', { email: state.guardian.email })) + '</p>';
     if (res.preview && view === 'staff') {
