@@ -102,3 +102,18 @@ Language,English,
 Yes No NA,Yes,
 Yes No NA,No,
 Yes No NA,N/A,
+Payment Plan,Full payment,one payment; eligible for the 6/4/2% date discount
+Payment Plan,2 instalments,about 3% more than full payment in total
+Payment Plan,4 instalments,about 5% more than full payment in total
+Programme,Bilingual,
+Programme,International,
+Route,Within policy - no decision needed,
+Route,Finance Officer,
+Route,CFO,
+Route,Head of School + CFO,
+Route,Finance Committee,
+Line Source,Form calculator,written by the form from 08_FEE_RULES
+Line Source,Committee,
+Line Source,Delegated,
+Line Source,Migration,backfilled from the legacy registers
+Campus,KG,

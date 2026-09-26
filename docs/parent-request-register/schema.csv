@@ -15,67 +15,89 @@ tab,band,order,field,type,source,required,validation,notes
 02_REQUESTS,family,14,Phone,text,form,yes,,
 02_REQUESTS,family,15,Language,text,form,yes,list: Language,drives which letter template is used
 02_REQUESTS,family,16,Campus,text,form,yes,list: Campus,
-02_REQUESTS,family,17,Children in Request,number,formula,no,,COUNTIFS on 03_REQUEST_STUDENTS
-02_REQUESTS,ask,18,Request Type,text,form,yes,list: Request Type,
-02_REQUESTS,ask,19,Reason Category,text,form,yes,list: Reason Category,drives the precedent pivot
-02_REQUESTS,ask,20,Parent Statement,text,form,yes,,the parent's own words
-02_REQUESTS,ask,21,Ask Summary,text,form,yes,,what they are asking for in one line
-02_REQUESTS,ask,22,Documents,url,script,no,,Drive folder created on submit
-02_REQUESTS,computed,23,Policy Entitlement USD,currency,formula,no,,from 08_FEE_RULES across all children
-02_REQUESTS,computed,24,Requested USD,currency,formula,no,,value of what the family asked for
-02_REQUESTS,computed,25,Gap USD,currency,formula,no,,Requested minus Entitlement; this is what is decided
-02_REQUESTS,computed,26,Within Policy,text,formula,no,,Yes when Gap <= 0; auto-resolves at Status 15
-02_REQUESTS,review,27,Reviewed By,text,finance,no,list: Staff,
-02_REQUESTS,review,28,Review Date,date,finance,no,,
-02_REQUESTS,review,29,Outstanding Balance,currency,finance,no,,from the finance app at review date
-02_REQUESTS,review,30,Payment History,text,finance,no,list: Payment History,
-02_REQUESTS,review,31,Years at School,number,formula,no,,longest of the children
-02_REQUESTS,review,32,Prior Requests,number,formula,no,,COUNTIFS on Guardian Email across years
-02_REQUESTS,review,33,Precedent IDs,text,finance,no,existing Request IDs,comparable past cases
-02_REQUESTS,review,34,Recommendation,text,finance,no,list: Recommendation,
-02_REQUESTS,review,35,Cost to School USD,currency,formula,no,,sum of decision lines; the number the board needs
-02_REQUESTS,review,36,Review Notes,text,finance,no,,
-02_REQUESTS,decision,37,Decided By,text,secretary,no,list: Decision Authority,
-02_REQUESTS,decision,38,Board Meeting Ref,text,secretary,no,BM-\d{4}-\d{2}-\d{2},blank for delegated and auto-resolved
-02_REQUESTS,decision,39,Decision Date,date,secretary,no,,
-02_REQUESTS,decision,40,Conditions,text,secretary,no,,plain text; the condition itself
-02_REQUESTS,decision,41,Condition Met,text,secretary,no,list: Yes No NA,must be Yes before Status 80
-02_REQUESTS,decision,42,Minute Link,url,secretary,no,,link to the board minutes
-02_REQUESTS,fulfilment,43,Informed Date,date,script,no,,REAL DATE set when the letter is sent; legacy held 21 prose spellings
-02_REQUESTS,fulfilment,44,Informed By,text,script,no,list: Staff,
-02_REQUESTS,fulfilment,45,Informed Channel,text,staff,no,list: Channel,
-02_REQUESTS,fulfilment,46,Letter Link,url,script,no,,generated from the row
-02_REQUESTS,fulfilment,47,Finance Applied Date,date,finance,no,,
-02_REQUESTS,fulfilment,48,Reconciled,text,formula,no,,Yes when every decision line has variance 0
-02_REQUESTS,outcome,49,Re-registered,text,admissions,no,list: Re-registered,an OUTCOME not a status; legacy mixed it into STATUS
-02_REQUESTS,outcome,50,Students Registered,number,admissions,no,>= 0,
-02_REQUESTS,outcome,51,Parent Response,text,staff,no,,
-02_REQUESTS,legacy,52,Legacy Source,text,migration,no,list: Legacy Source,which of the four legacy registers this came from
-02_REQUESTS,legacy,53,Legacy Notes,text,migration,no,,anything from the old file that maps nowhere
+02_REQUESTS,family,17,Alumni Family,bool,form,no,,drives the 10% alumni rate on the first child
+02_REQUESTS,family,18,Staff Family,bool,form,no,,staff cases always go to the Finance Committee
+02_REQUESTS,family,19,Children in Request,number,formula,no,,COUNTIFS on 03_REQUEST_STUDENTS
+02_REQUESTS,ask,20,Request Type,text,form,yes,list: Request Type,
+02_REQUESTS,ask,21,Reason Category,text,form,yes,list: Reason Category,drives the precedent pivot
+02_REQUESTS,ask,22,Parent Statement,text,form,yes,,the parent's own words
+02_REQUESTS,ask,23,Ask Summary,text,form,yes,,what they are asking for in one line
+02_REQUESTS,ask,24,Payment Plan,text,form,yes,list: Payment Plan,full / 2 instalments / 4 instalments; changes the tuition base
+02_REQUESTS,ask,25,Pay By,date,form,no,,full-payment date; drives the 6/4/2% discount
+02_REQUESTS,ask,26,Multi-year,bool,form,no,,asks for more than one year; always to committee
+02_REQUESTS,ask,27,Request Details,text,form,no,,"extension days, late charge, free text"
+02_REQUESTS,ask,28,Documents,url,script,no,,Drive folder created on submit
+02_REQUESTS,computed,29,Policy Entitlement USD,currency,formula,no,,from 08_FEE_RULES across all children
+02_REQUESTS,computed,30,Requested USD,currency,formula,no,,value of what the family asked for
+02_REQUESTS,computed,31,Gap USD,currency,formula,no,,Requested minus Entitlement; this is what is decided
+02_REQUESTS,computed,32,Within Policy,text,formula,no,,Yes when Gap <= 0; auto-resolves at Status 15
+02_REQUESTS,computed,33,Route,text,formula,no,list: Route,"who decides, from the delegation table"
+02_REQUESTS,computed,34,Route Reasons,text,formula,no,,why the request was routed there
+02_REQUESTS,review,35,Reviewed By,text,finance,no,list: Staff,
+02_REQUESTS,review,36,Review Date,date,finance,no,,
+02_REQUESTS,review,37,Outstanding Balance,currency,finance,no,,from the finance app at review date
+02_REQUESTS,review,38,Payment History,text,finance,no,list: Payment History,
+02_REQUESTS,review,39,Years at School,number,formula,no,,longest of the children
+02_REQUESTS,review,40,Prior Requests,number,formula,no,,COUNTIFS on Guardian Email across years
+02_REQUESTS,review,41,Precedent IDs,text,finance,no,existing Request IDs,comparable past cases
+02_REQUESTS,review,42,Recommendation,text,finance,no,list: Recommendation,
+02_REQUESTS,review,43,Cost to School USD,currency,formula,no,,sum of decision lines; the number the board needs
+02_REQUESTS,review,44,Review Notes,text,finance,no,,
+02_REQUESTS,decision,45,Decided By,text,secretary,no,list: Decision Authority,
+02_REQUESTS,decision,46,Board Meeting Ref,text,secretary,no,BM-\d{4}-\d{2}-\d{2},blank for delegated and auto-resolved
+02_REQUESTS,decision,47,Decision Date,date,secretary,no,,
+02_REQUESTS,decision,48,Conditions,text,secretary,no,,plain text; the condition itself
+02_REQUESTS,decision,49,Condition Met,text,secretary,no,list: Yes No NA,must be Yes before Status 80
+02_REQUESTS,decision,50,Minute Link,url,secretary,no,,link to the board minutes
+02_REQUESTS,fulfilment,51,Informed Date,date,script,no,,REAL DATE set when the letter is sent; legacy held 21 prose spellings
+02_REQUESTS,fulfilment,52,Informed By,text,script,no,list: Staff,
+02_REQUESTS,fulfilment,53,Informed Channel,text,staff,no,list: Channel,
+02_REQUESTS,fulfilment,54,Letter Link,url,script,no,,generated from the row
+02_REQUESTS,fulfilment,55,Finance Applied Date,date,finance,no,,
+02_REQUESTS,fulfilment,56,Reconciled,text,formula,no,,Yes when every decision line has variance 0
+02_REQUESTS,outcome,57,Re-registered,text,admissions,no,list: Re-registered,an OUTCOME not a status; legacy mixed it into STATUS
+02_REQUESTS,outcome,58,Students Registered,number,admissions,no,>= 0,
+02_REQUESTS,outcome,59,Parent Response,text,staff,no,,
+02_REQUESTS,legacy,60,Legacy Source,text,migration,no,list: Legacy Source,which of the four legacy registers this came from
+02_REQUESTS,legacy,61,Legacy Notes,text,migration,no,,anything from the old file that maps nowhere
 03_REQUEST_STUDENTS,,1,Request ID,text,script,yes,exists in 02_REQUESTS,
 03_REQUEST_STUDENTS,,2,Student ID,text,form,yes,exists in SIS,MANDATORY; only 15% of legacy rows had a usable one
 03_REQUEST_STUDENTS,,3,Student Name,text,form,yes,,display only; never a join key
 03_REQUEST_STUDENTS,,4,Grade,text,form,yes,list: Grade,
-03_REQUEST_STUDENTS,,5,Campus,text,form,yes,list: Campus,
-03_REQUEST_STUDENTS,,6,Relationship to Guardian,text,form,yes,list: Student Relationship,legacy data carries (nephew) and (niece) in free text
-03_REQUEST_STUDENTS,,7,Enrolment Status,text,form,yes,list: Enrolment Status,new or existing
-03_REQUEST_STUDENTS,,8,Child Order,number,formula,yes,>= 1,computed across the family; drives the fee ladder
-03_REQUEST_STUDENTS,,9,Years at School,number,formula,no,>= 0,
+03_REQUEST_STUDENTS,,5,Programme,text,form,yes,list: Programme,Bilingual or International; changes the tuition from Grade 1
+03_REQUEST_STUDENTS,,6,Campus,text,form,yes,list: Campus,
+03_REQUEST_STUDENTS,,7,Relationship to Guardian,text,form,yes,list: Student Relationship,legacy data carries (nephew) and (niece) in free text
+03_REQUEST_STUDENTS,,8,Enrolment Status,text,form,yes,list: Enrolment Status,new or existing
+03_REQUEST_STUDENTS,,9,Child Order,number,formula,yes,>= 1,computed across the family; drives the fee ladder
+03_REQUEST_STUDENTS,,10,Years at School,number,formula,no,>= 0,
+03_REQUEST_STUDENTS,,11,Tuition Base USD,currency,formula,no,,tuition for the chosen payment plan
+03_REQUEST_STUDENTS,,12,Tuition Entitled Pct,number,formula,no,0-100,sibling or alumni rate from 08_FEE_RULES
+03_REQUEST_STUDENTS,,13,Tuition Asked Pct,number,form,no,0-100,"total discount asked, including entitlement"
+03_REQUEST_STUDENTS,,14,Capital Base USD,currency,formula,no,,
+03_REQUEST_STUDENTS,,15,Capital Entitled Pct,number,formula,no,0-100,capital ladder rate
+03_REQUEST_STUDENTS,,16,Capital Asked Pct,number,form,no,0-100,
+03_REQUEST_STUDENTS,,17,Other Fee,text,form,no,list: Fee Type,registration or enrolment
+03_REQUEST_STUDENTS,,18,Other Asked Pct,number,form,no,0-100,
+03_REQUEST_STUDENTS,,19,Gap USD,currency,formula,no,,what this child's asks cost above entitlement
 04_DECISION_LINES,,1,Line ID,text,script,yes,unique; Request ID + /L + n,
 04_DECISION_LINES,,2,Request ID,text,script,yes,exists in 02_REQUESTS,
 04_DECISION_LINES,,3,Student ID,text,script,yes,exists in 03_REQUEST_STUDENTS,one line per child per fee
 04_DECISION_LINES,,4,Fee Type,text,secretary,yes,list: Fee Type,
 04_DECISION_LINES,,5,Basis,text,secretary,yes,list: Basis,
 04_DECISION_LINES,,6,Value,number,secretary,yes,> 0,percent or USD per Basis
-04_DECISION_LINES,,7,Authority,text,secretary,yes,list: Authority,which rule or person grants this line
-04_DECISION_LINES,,8,On Policy,text,formula,no,,compares Value to 08_FEE_RULES; No means it is a real decision
-04_DECISION_LINES,,9,Effective From,date,secretary,yes,,
-04_DECISION_LINES,,10,Effective To,date,secretary,yes,>= Effective From,MANDATORY; legacy holds 16 open-ended commitments
-04_DECISION_LINES,,11,Conditions,text,secretary,no,,
-04_DECISION_LINES,,12,Condition Met,text,secretary,no,list: Yes No NA,
-04_DECISION_LINES,,13,Finance Ref,text,finance,no,,the finance app document number
-04_DECISION_LINES,,14,Applied Value,number,finance,no,,what was actually entered
-04_DECISION_LINES,,15,Variance,number,formula,no,must be 0,Applied Value minus Value
+04_DECISION_LINES,,7,Base USD,currency,script,yes,,the amount the percentage applies to - names the payment-plan base
+04_DECISION_LINES,,8,Amount USD,currency,script,yes,,the discount in dollars
+04_DECISION_LINES,,9,Authority,text,secretary,yes,list: Authority,which rule or person grants this line
+04_DECISION_LINES,,10,On Policy,text,formula,no,,compares Value to 08_FEE_RULES; No means it is a real decision
+04_DECISION_LINES,,11,Source,text,script,yes,list: Line Source,Form calculator / Committee / Delegated / Migration
+04_DECISION_LINES,,12,Rule Status,text,script,no,,confirmed or inferred - inferred rules are not yet approved by the Board
+04_DECISION_LINES,,13,Effective From,date,secretary,yes,,
+04_DECISION_LINES,,14,Effective To,date,secretary,yes,>= Effective From,MANDATORY; legacy holds 16 open-ended commitments
+04_DECISION_LINES,,15,Conditions,text,secretary,no,,
+04_DECISION_LINES,,16,Condition Met,text,secretary,no,list: Yes No NA,
+04_DECISION_LINES,,17,Finance Ref,text,finance,no,,the finance app document number
+04_DECISION_LINES,,18,Applied Value,number,finance,no,,what was actually entered
+04_DECISION_LINES,,19,Variance,number,formula,no,must be 0,Applied Value minus Value
 08_FEE_RULES,,1,Fee Type,text,cfo,yes,list: Fee Type,
 08_FEE_RULES,,2,Child Order,text,cfo,yes,"1, 2, 3, 4+",
 08_FEE_RULES,,3,Relationship,text,cfo,yes,list: Student Relationship,whether nephews and nieces count toward the ladder
